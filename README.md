@@ -58,6 +58,17 @@ No need to call it in callback.
 `render()` just registers callback and waits for preparing application.
 
 
+## Confliction
+
+- If `FB` object exists, FBReady try to use the `FB` and doesn't install new "all.js".
+
+- If `FB.init()` has been already called, that looks like working but not good.   
+  You will see a message like "FB.init has already been called".  
+  It may be caused by installing code for widgets such as "Like Button"  
+  because they call automatically `FB.init`.
+
+- In context of callback for `FB.getLoginStatus()`, FBReady does not work.
+
 ## API
 
 ### Events
