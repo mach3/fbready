@@ -73,16 +73,13 @@
 		 */
 		my._initApp = function(){
 			var self = this;
-			FB.init({appId: self.appId});
-			FB.Event.subscribe("auth.login", function(){
-				self.fire(self.EVENT_LOGIN);
-			});
-			FB.getLoginStatus(function(r){
-				self.fire(self.EVENT_READY);
+			FB.Event.subscribe("auth.statusChange", function(r){
 				if(r.status === "connected"){
 					self.fire(self.EVENT_LOGIN);
 				}
 			});
+			FB.init({appId: this.appId});
+			this.fire(this.EVENT_READY);
 		};
 
 		/**
@@ -93,8 +90,8 @@
 		my.on = function(name, callback){
 			if(! this._has(this.callbacks, name)){ return; }
 			this.callbacks[name].push(callback);
-			if(true === this.status[name]){
-				this.fire(name);
+			if(this._getStatus(name)){
+				callback();
 			}
 			return this;
 		};
@@ -120,6 +117,15 @@
 		 */
 		my._setStatus = function(key, value){
 			this.status[key] = !! value;
+		};
+
+		/**
+		 * Get value of named status as boolean
+		 * @param String key
+		 * @return Boolean
+		 */
+		my._getStatus = function(key){
+			return !! this.status[key];
 		};
 
 		/**
