@@ -92,11 +92,12 @@
 		 */
 		my.fire = function(name){
 			var self = this;
-			if(! this._has(this.callbacks, name)){ return; }
-			this._each(this.callbacks[name], function(cb){
-				cb({ target : self, type : name });
-			});
 			this._setStatus(name, true);
+			if(this._has(this.callbacks, name)){
+				this._each(this.callbacks[name], function(cb){
+					cb({ target : self, type : name });
+				});
+			}
 			return this;
 		};
 
